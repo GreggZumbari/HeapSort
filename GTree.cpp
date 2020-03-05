@@ -1,6 +1,6 @@
 //GHeap.cpp
 
-#include "GHeapRecursive.h"
+#include "GTree.h"
 
 //Constructor
 GHeap::GHeap(int LENGTH) {
