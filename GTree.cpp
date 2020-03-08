@@ -1,9 +1,9 @@
-//GHeap.cpp
+//GTree.cpp
 
 #include "GTree.h"
 
 //Constructor
-GHeap::GHeap(int LENGTH) {
+GTree::GTree(int LENGTH) {
 	this->LENGTH = LENGTH;
 	heap = new int[LENGTH];
 	
@@ -15,36 +15,36 @@ GHeap::GHeap(int LENGTH) {
 	highest = 0;
 }
 
-GHeap::~GHeap() {
+GTree::~GTree() {
 	delete(heap);
 }
 
-int GHeap::getHighest() {
+int GTree::getHighest() {
 	return highest;
 }
 
-int GHeap::getParent(int address) {
+int GTree::getParent(int address) {
 	if (address < LENGTH) {
 		return heap[address];
 	}
 	return -1; //Return -1 if the program tries to access an address which isn't allocated in memory
 }
 
-int GHeap::getChild1(int address) {
+int GTree::getChild1(int address) {
 	if ((address + 1) * 2 - 1 < LENGTH) {
 		return heap[(address + 1) * 2 - 1];
 	}
 	return -1; //Return -1 if the program tries to access an address which isn't allocated in memory
 }
 		
-int GHeap::getChild2(int address) {
+int GTree::getChild2(int address) {
 	if ((address + 1) * 2 < LENGTH) {
 		return heap[(address + 1) * 2];
 	}
 	return -1; //Return -1 if the program tries to access an address which isn't allocated in memory
 }
 
-bool GHeap::isEmpty(int address) {
+bool GTree::isEmpty(int address) {
 	if (heap[address] == 0) {
 		return true;
 	}
@@ -53,7 +53,7 @@ bool GHeap::isEmpty(int address) {
 	}
 }
 
-void GHeap::setParent(int address, int value) {
+void GTree::setParent(int address, int value) {
 	if (address < LENGTH) {
 		//Set that value
 		heap[address] = value;
@@ -65,7 +65,7 @@ void GHeap::setParent(int address, int value) {
 	}
 }
 
-void GHeap::setChild1(int address, int value) {
+void GTree::setChild1(int address, int value) {
 	if ((address + 1) * 2 - 1 < LENGTH) {
 		heap[(address + 1) * 2 - 1] = value;
 		
@@ -75,7 +75,7 @@ void GHeap::setChild1(int address, int value) {
 	}
 }
 
-void GHeap::setChild2(int address, int value) {
+void GTree::setChild2(int address, int value) {
 	if ((address + 1) * 2 < LENGTH) {
 		heap[(address + 1) * 2] = value;
 		

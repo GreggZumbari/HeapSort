@@ -21,7 +21,7 @@ void setChild2(int, int) - Sets the second child of the address at the first int
 
 using namespace std;
 
-class GHeap {
+class GTree {
 	public:
 		//Constructor & Destructor
 		GHeap(int);
