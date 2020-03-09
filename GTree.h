@@ -1,4 +1,4 @@
-//GHeap.h
+//GTree.h
 /*
 This object is a tree of integers, starting with a single parent node. Each node branches off to two (2) other nodes, and could go on indefinetly (or at least while it hasn't run out of allocated memory).
 By the way, when I say node, I'm not referring to a struct or anything like that. I'm referring to a single element in the tree, which as you can see, is an int array.
@@ -24,8 +24,8 @@ using namespace std;
 class GTree {
 	public:
 		//Constructor & Destructor
-		GHeap(int);
-		~GHeap();
+		GTree(int);
+		~GTree();
 		
 		//Functions
 		int getHighest();
