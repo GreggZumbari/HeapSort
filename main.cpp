@@ -7,11 +7,13 @@ The program first allows the user to enter up to 100 different number inputs, th
 The above description is nearly exactly copied over from my previous Tree project because this project does nearly exactly the same thing. 
 This time, however, you are allowed to add, remove, and search for specific numbers throughout the Tree. Also, the medium for the inputs will now be Node structs (named GNode, of course) instead of an int array, sorted using some clever math
 
-void add(int) - 
-void insertToken(GTree& tree, int address, int newToken) - A recursive method which takes an address of a GTree and a new token which must be sorted into it correctly to create a correct max Tree. It also calls in the pointer to the GTree in question. This method should only be used within the maxTreeSort method.
-GTree maxTreeSort(int*) - Input an array on ints and put them into a Tree, sorted such that the Tree is a max Tree.
-void printTree(GTree) - Print out the passed in Tree in a visual manner
-void add(int) - Add a number to the Tree
+bool search(int, GTree*&) - Searches the GTree for the int that was passed in. Returns true if it is found.
+void searchFunction(int, GTree*&) - Asks the user what number they want to search for, then 
+void addFunction(GTree*&) - Directly asks the user for the character that they want to put into the tree. Then it sends that char to add to the actual add() function.
+void removeFunction(GTree*&) - Directly asks the user for the character that they want to remvoe from the tree. Then it sends that char to add to the actual remove() function.
+char* consoleFunction(bool&) - Gets the space-terminated string of numbers from the user through the console, then returns it.
+char* fileFunction(bool&) - Gets the path of the file which contains the space-terminated string of numbers, then imports and returns that string.
+char* getInput(char*, bool&, bool&, GTree*&);
 
 @author Greggory Hickman, March 2020
 @version 1.0
@@ -19,6 +21,7 @@ void add(int) - Add a number to the Tree
 
 #include <iostream>
 #include <cstring>
+#include <stdio.h>
 
 #include "BattlePack.h"
 #include "GTree.h"
@@ -28,18 +31,19 @@ void add(int) - Add a number to the Tree
 
 using namespace std;
 
-void add(GTree&);
-void remove(GTree&);
-char* console(bool&);
-void file(bool&);
-char* getInput(bool&, bool&, GTree&);
+bool search(int, GTree*&);
+void searchFunction(int, GTree*&);
+void addFunction(GTree*&);
+void removeFunction(GTree*&);
+char* consoleFunction(bool&);
+char* fileFunction(bool&);
+char* getInput(char*, bool&, bool&, GTree*&);
 
 int main() {
-	
 	//Define some variables and objects that we will need throughout the program
 	bool quit = false;
 	char* inputString; //Initializing as a pointer so that I'm not taking up memory yet
-	GTree tree(LEN);
+	GTree* tree = new GTree(LEN);
 	
 	//Greeting, and an introduction to what a max Tree is in case the user doesn't know
 	cout << "Welcome to Gregg\'s fabulous Tree program!" << endl <<
@@ -67,7 +71,7 @@ int main() {
 			cout << "> ";
 			cin >> cmdin; cin.clear(); cin.ignore(LEN, '\n');
 			
-			charList = getInput(quit, haveInput, tree); //Get the input from the user using a series of prompts
+			charList = getInput(cmdin, quit, haveInput, tree); //Get the input from the user using a series of prompts
 			//Quit if the quit command was run inside of getInput()
 			if (quit) {
 				return 0;
@@ -88,46 +92,63 @@ int main() {
 		cout << endl;
 		
 		//Print current Tree
-		printTree(&Tree);
+		//printTree(&tree);
 	}
 	
 	return 0;
 }
 
+//Return true if in is found
+bool search(int in, GTree*& tree) {
+	
+}
+
+//Search the tree for a value
+void searchFunction(int in, GTree*& tree) {
+	
+}
+
 //Add to Tree
-void add(GTree& tree) {
-	char cInput[1];
+void addFunction(GTree*& tree) {
+	char cInput[LEN];
 	int iInput;
 	cout << "Add a number..." << endl <<
 	"Type in the number to add." << endl;
 	
-	cin.getline(cInput, 1);
-	iInput = cInput[0] + 48;
+	cin.getline(cInput, LEN);
 	
-	cout << iInput << endl;
+	for (int i = 0; i < ; i++) {
+		iInput = (int)(cInput[0]) + 48;
+		cout << iInput << endl;
+	}
+}
+
+void add(int in, GTree*& tree) {
+	
 }
 
 //Remove from Tree
-void remove(GTree& tree) {
+void removeFunction(GTree*& tree) {
 	cout << "Remove a number..." << endl <<
 	"Type in the number to remove." << endl;
 }
 
-char* console(bool& haveInput) {
+//Read from console
+char* consoleFunction(bool& haveInput) {
 	
 }
 
-void file(bool& haveInput) {
+//Read from file
+char* fileFunction(bool& haveInput) {
 	
 }
 
-char* getInput(bool& quit, bool& haveInput, GTree& tree) {
+char* getInput(char* cmdin, bool& quit, bool& haveInput, GTree*& tree) {
 	char* charList = new char[BIGLEN];
-	
 	
 	//Add a single input, read in from console
 	if (strcmp(cmdin, "add") == 0 || strcmp(cmdin, "a") == 0 || strcmp(cmdin, "A") == 0) {
-		add();
+		addFunction(tree);
 	}
 	//Read from console
 	if (strcmp(cmdin, "console") == 0 || strcmp(cmdin, "c") == 0 || strcmp(cmdin, "C") == 0) {

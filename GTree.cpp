@@ -23,7 +23,7 @@ int GTree::getHighest() {
 	return highest;
 }
 
-int GTree::getParent(int address) {
+int GTree::get(int address) {
 	if (address < LENGTH) {
 		return heap[address];
 	}
@@ -53,7 +53,7 @@ bool GTree::isEmpty(int address) {
 	}
 }
 
-void GTree::setParent(int address, int value) {
+void GTree::set(int address, int value) {
 	if (address < LENGTH) {
 		//Set that value
 		heap[address] = value;
