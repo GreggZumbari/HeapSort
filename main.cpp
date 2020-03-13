@@ -34,10 +34,14 @@ using namespace std;
 bool search(int, GTree*&);
 void searchFunction(int, GTree*&);
 void addFunction(GTree*&);
+void add(int, GTree*&);
 void removeFunction(GTree*&);
 char* consoleFunction(bool&);
 char* fileFunction(bool&);
 char* getInput(char*, bool&, bool&, GTree*&);
+void insertToken(GTree*, int, int);
+GTree treeSort(int*);
+void printTree(GTree*);
 
 int main() {
 	//Define some variables and objects that we will need throughout the program
@@ -48,7 +52,7 @@ int main() {
 	//Greeting, and an introduction to what a max Tree is in case the user doesn't know
 	cout << "Welcome to Gregg\'s fabulous Tree program!" << endl <<
 	"This program is a kind of number sorter which sorts the numbers given to it in a max Tree formation." <<
-	"That means that the highest number will be at the top, and every number branching off of that will be smaller, and so on.";
+	"That means that the highest number will be at the top, and every number branching off of that will be smaller, and so on." << endl;
 	
 	//The loop that the majority of the program takes place in
 	while (!quit) {
@@ -73,9 +77,7 @@ int main() {
 			
 			charList = getInput(cmdin, quit, haveInput, tree); //Get the input from the user using a series of prompts
 			//Quit if the quit command was run inside of getInput()
-			if (quit) {
-				return 0;
-			}
+			if (quit) return 0;
 		}
 		
 		//Parse the char* input into an int* with each number separated
@@ -110,19 +112,22 @@ void searchFunction(int in, GTree*& tree) {
 
 //Add to Tree
 void addFunction(GTree*& tree) {
-	char cInput[LEN];
+	char* cInput = new char[LEN];
 	int iInput;
 	cout << "Add a number..." << endl <<
 	"Type in the number to add." << endl;
 	
+	//Input the single number
 	cin.getline(cInput, LEN);
 	
-	for (int i = 0; i < ; i++) {
+	for (int i = 0; i < LEN; i++) {
 		iInput = (int)(cInput[0]) + 48;
 		cout << iInput << endl;
 	}
+	delete(cInput);
 }
 
+//Actual adding
 void add(int in, GTree*& tree) {
 	
 }
@@ -145,6 +150,7 @@ char* fileFunction(bool& haveInput) {
 
 char* getInput(char* cmdin, bool& quit, bool& haveInput, GTree*& tree) {
 	char* charList = new char[BIGLEN];
+	clearCString(charList, BIGLEN);
 	
 	//Add a single input, read in from console
 	if (strcmp(cmdin, "add") == 0 || strcmp(cmdin, "a") == 0 || strcmp(cmdin, "A") == 0) {
@@ -222,3 +228,139 @@ char* getInput(char* cmdin, bool& quit, bool& haveInput, GTree*& tree) {
 	//Return the complete input
 	return charList;
 }
+
+void insertToken(GTree* tree, int address, int newToken) {
+	//cout << "New Token: " << newToken << ", ";
+	//printTree(tree);
+	
+	//Replace the current token at address with input[i]
+	int oldToken = tree->get(address);
+	tree->setParent(address, newToken);
+	
+	//Start the cycle again if necesary
+	//If the old token wasn't 0 (this is here because without it, the zeroes all the way down the chain would compare themselves to each other needlessly, which would be super-mega inefficient)
+	if (oldToken != 0) {
+		//If either child doesn't exist yet, set the oldToken as the new child
+		if (tree->getChild1(address) == 0) {
+			tree->setChild1(address, oldToken);
+			return;
+		}
+		if (tree->getChild2(address) == 0) {
+			tree->setChild2(address, oldToken);
+			return;
+		}
+		
+		//Otherwise, start the cycle again
+		insertToken(tree, (address + 1) * 2 - 1, oldToken);
+	}
+}
+
+GTree treeSort(int* input) {
+	
+	GTree tree(BIGLEN);
+	//For future reference, the "boss parent" is the very first node; the one which all others lead back to
+	//For every token in input...
+	for (int i = 0; input[i] != 0; i++) { //i is iterator for input
+		for (int j = 0; j < LEN; j++) { //j is iterator for tree
+			//... and go through the tree from left to right until a token of lower magnitude than the current number from input is found.
+			//At which point replace the new token with the old, then recursively sort down the tree from that point.
+			if (input[i] >= tree.get(j)) {
+				//Sort the new token and all of its children
+				insertToken(&tree, j, input[i]);
+				break;
+			}
+		}
+	}
+	
+	return tree;
+}
+
+GTree treeSort(int input) {
+	
+	GTree tree(BIGLEN);
+	//For future reference, the "boss parent" is the very first node; the one which all others lead back to
+	//For every token in input...
+	for (int i = 0; i < LEN; i++) { //i is iterator for tree
+		//... and go through the tree from left to right until a token of lower magnitude than the current number from input is found.
+		//At which point replace the new token with the old, then recursively sort down the tree from that point.
+		if (input[i] >= tree.get(i)) {
+			//Sort the new token and all of its children
+			insertToken(&tree, i, input);
+			break;
+		}
+	}
+	
+	return tree;
+}
+
+void printTree(GTree* tree) {
+	//A semi-okay method for displaying the tree
+	/*
+	cout << "&tree in printTree" << tree.tree << endl;
+	bool odd = false;
+	for (int i = 0; i < LEN; i++) {
+		char child;
+		if (odd == true)
+			child = 'a';
+		else
+			child = 'b';
+		
+		cout << "After New C1: " << tree.tree[i] << endl << endl;
+		if (i == 0) {
+			cout << "Master parent: " << tree.get(i) << endl;
+		}
+		else {
+			cout << "Pair " << (i + 3) / 2 << child << ": " << tree.get(i) << endl;
+		}
+		odd = !odd;
+		
+		cout << "After New C2: " << tree.tree[i] << endl << endl;
+	}
+	*/
+	
+	//A much better method for displaying the tree
+	int limit = -1;
+	int generation = 0;
+	bool even = true;
+	cout << "Note: Numbers that come from the same parent are held together by parentheses, e.g. (4 2)." << endl;
+	
+	cout << "Tree Tree: ";
+	//An algorithm for separating the generations properly
+	for (int i = 0; i < BIGLEN; i++) {
+		//If there are no more tokens, then just stop printing empty slots
+		if (i > tree->getHighest()) {
+			break;
+		}
+		//If generation is over, start a new line
+		if (i + 2 >= limit * 2 + 1) {
+			cout << endl;
+			cout << "Generation " << ++generation << ": "; //Announce the new generation
+			limit = i + 1;
+		}
+		//If the token is not empty, print it to console.
+		if (!tree->isEmpty(i)) {
+			//If the token address is odd or if it is the master parent, put an open parenthesis before it
+			if (!even || generation == 1) {
+				cout << "(";
+			}
+			
+			cout << tree->get(i);
+			
+			//If the token address is even, put a close parenthesis after it, and indent the next set
+			//Or if the token address is odd but the token has no sibbling, put a close parenthesis after it as well
+			if (even || tree->isEmpty(i + 1)) { 
+				cout << ")";
+			}
+		}
+		//If the token is empty, but the generation is not over (so that any gaps in between child groups don't cause parent-child mix up visually)
+		else {
+			cout << "()";
+		}
+		
+		cout << " ";
+		even = !even; //Reverse polarity of even
+	}
+	cout << endl << endl;
+	
+}
+
