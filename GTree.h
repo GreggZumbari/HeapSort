@@ -40,5 +40,5 @@ class GTree {
 	private:
 		int highest;
 		int LENGTH;
-		int* tree;
+		int* heap;
 };

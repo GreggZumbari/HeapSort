@@ -7,11 +7,13 @@ The program first allows the user to enter up to 100 different number inputs, th
 The above description is nearly exactly copied over from my previous Tree project because this project does nearly exactly the same thing. 
 This time, however, you are allowed to add, remove, and search for specific numbers throughout the Tree. Also, the medium for the inputs will now be Node structs (named GNode, of course) instead of an int array, sorted using some clever math
 
-void insertToken(GTree& tree, int address, int newToken);
-GTree maxTreeSort(int*);
-void printTree(GTree*);
-int* parseInput(char*);
-char* getInput(bool&);
+bool search(int, GTree*&) - Searches the GTree for the int that was passed in. Returns true if it is found.
+void searchFunction(int, GTree*&) - Asks the user what number they want to search for, then 
+void addFunction(GTree*&) - Directly asks the user for the character that they want to put into the tree. Then it sends that char to add to the actual add() function.
+void removeFunction(GTree*&) - Directly asks the user for the character that they want to remvoe from the tree. Then it sends that char to add to the actual remove() function.
+char* consoleFunction(bool&) - Gets the space-terminated string of numbers from the user through the console, then returns it.
+char* fileFunction(bool&) - Gets the path of the file which contains the space-terminated string of numbers, then imports and returns that string.
+char* getInput(char*, bool&, bool&, GTree*&);
 
 @author Greggory Hickman, March 2020
 @version 1.0
@@ -20,56 +22,211 @@ char* getInput(bool&);
 #include <iostream>
 #include <cstring>
 #include <stdio.h>
-#include <math.h>
 
 #include "BattlePack.h"
 #include "GTree.h"
 
+#define LEN 100
+#define BIGLEN 3000
+
 using namespace std;
 
-void insertToken(GTree& tree, int address, int newToken);
-GTree maxTreeSort(int*);
+bool search(int, GTree*&);
+void searchFunction(int, GTree*&);
+void addFunction(GTree*&);
+void add(int, GTree*&);
+void removeFunction(GTree*&);
+char* consoleFunction(bool&);
+char* fileFunction(bool&);
+char* getInput(char*, bool&, bool&, GTree*&);
+void insertToken(GTree*, int, int);
+GTree treeSort(int*);
 void printTree(GTree*);
-int* parseInput(char*);
-char* getInput(bool&);
 
 int main() {
-	
 	//Define some variables and objects that we will need throughout the program
 	bool quit = false;
-	char* inputString;
+	char* inputString; //Initializing as a pointer so that I'm not taking up memory yet
+	GTree* tree = new GTree(LEN);
 	
-	//Greetingd, and an introduction to what a tree is in case the user doesn't know
+	//Greeting, and an introduction to what a max Tree is in case the user doesn't know
 	cout << "Welcome to Gregg\'s fabulous Tree program!" << endl <<
-	"This program is a kind of number sorter which sorts the numbers given to it in a tree formation." <<
-	"Each number will always have a lower number branching off to the left, and a higher number branching off to the right." << endl;
+	"This program is a kind of number sorter which sorts the numbers given to it in a max Tree formation." <<
+	"That means that the highest number will be at the top, and every number branching off of that will be smaller, and so on." << endl;
 	
 	//The loop that the majority of the program takes place in
 	while (!quit) {
-		inputString = getInput(quit); //Get the input from the user using a series of prompts
-		//Quit if the quit command was run inside of getInput()
-		if (quit) {
-			return 0;
+		
+		bool haveInput = false;
+		char cmdin[LEN];
+		char* charList; //Once again initializing as a pointer so that I'm not taking up memory yet
+		
+		//This is the part that lets the user type a command
+		while (!haveInput) {
+			//List out all of the commands
+			cout << 
+			"Type \"add\" to add a single number" << endl <<
+			"Type \"remove\" to remove a single number" << endl <<
+			"Type \"console\" to add a list of numbers" << endl << 
+			"Type \"file\" to read a list of numbers from a file" << endl << 
+			"Type \"search\" to find out where a specific number resides within the Tree" << endl << 
+			"Type \"exit\" to kill the program" << endl;
+		
+			cout << "> ";
+			cin >> cmdin; cin.clear(); cin.ignore(LEN, '\n');
+			
+			charList = getInput(cmdin, quit, haveInput, tree); //Get the input from the user using a series of prompts
+			//Quit if the quit command was run inside of getInput()
+			if (quit) return 0;
 		}
 		
 		//Parse the char* input into an int* with each number separated
-		int* numStream = parseInput(inputString);
+		int* numStream = parseZTCString(charList, 32);
 		
-		//Print out the parsed input to show the user exactly what will be used in the tree
+		//Print out the parsed input to show the user exactly what will be used in the Tree
 		cout << "Input confirmed: ";
 		for (int i = 0; numStream[i] != 0; i++) cout << numStream[i] << " "; //Print all int-ified inputs
 		cout << endl << endl;
 		
-		//Ask to sort into a max tree (in case somebody wants to expand this code in the future to do things other than just max tree)
-		cout << "Sorting into max tree..." << endl;
-		GTree tree = maxTreeSort(numStream); //Sort numStream into max tree
+		//Ask to sort into a max Tree (in case somebody wants to expand this code in the future to do things other than just max Tree)
+		cout << "Sorting into max Tree..." << endl;
+		//GTree tree = maxTreeSort(numStream); //Sort numStream into max Tree
 		cout << endl;
 		
-		//Print current tree
-		printTree(&tree);
+		//Print current Tree
+		//printTree(&tree);
 	}
 	
 	return 0;
+}
+
+//Return true if in is found
+bool search(int in, GTree*& tree) {
+	
+}
+
+//Search the tree for a value
+void searchFunction(int in, GTree*& tree) {
+	
+}
+
+//Add to Tree
+void addFunction(GTree*& tree) {
+	char* cInput = new char[LEN];
+	int iInput;
+	cout << "Add a number..." << endl <<
+	"Type in the number to add." << endl;
+	
+	//Input the single number
+	cin.getline(cInput, LEN);
+	
+	for (int i = 0; i < LEN; i++) {
+		iInput = (int)(cInput[0]) + 48;
+		cout << iInput << endl;
+	}
+	delete(cInput);
+}
+
+//Actual adding
+void add(int in, GTree*& tree) {
+	
+}
+
+//Remove from Tree
+void removeFunction(GTree*& tree) {
+	cout << "Remove a number..." << endl <<
+	"Type in the number to remove." << endl;
+}
+
+//Read from console
+char* consoleFunction(bool& haveInput) {
+	
+}
+
+//Read from file
+char* fileFunction(bool& haveInput) {
+	
+}
+
+char* getInput(char* cmdin, bool& quit, bool& haveInput, GTree*& tree) {
+	char* charList = new char[BIGLEN];
+	clearCString(charList, BIGLEN);
+	
+	//Add a single input, read in from console
+	if (strcmp(cmdin, "add") == 0 || strcmp(cmdin, "a") == 0 || strcmp(cmdin, "A") == 0) {
+		addFunction(tree);
+	}
+	//Read from console
+	if (strcmp(cmdin, "console") == 0 || strcmp(cmdin, "c") == 0 || strcmp(cmdin, "C") == 0) {
+		cout << "Reading from console..." << endl <<
+		"Type in your numbers, each separated by a space." << endl;
+		
+		//Read in the input from console and put it into charList
+		cout << "Console> ";
+		cin.getline(charList, BIGLEN);
+
+		//At this point, we have our input (charList). Now, let's confirm that it's what the user wants.
+		cout << "Input: " << charList << endl;
+		cout << "Confirm Input? (y/n)" << endl;
+		cout << "> ";
+		char confirm;
+		cin >> confirm; cin.clear(); cin.ignore(LEN, '\n');
+		
+		if (confirm == 'y') {
+			haveInput = true;
+		}
+	}
+	//Read from file
+	else if (strcmp(cmdin, "file") == 0 || strcmp(cmdin, "f") == 0 || strcmp(cmdin, "F") == 0) {
+		char add[LEN];
+		FILE* fin = NULL; //Credit to my dad from showing me the FILE libraries from ye olde C
+		
+		cout << "Reading from file..." << endl <<
+		"Input the path to your file. It must be a text file:" << endl;
+		
+		//Get address
+		cout << "File> ";
+		cin.getline(add, LEN);
+		
+		//Get file from address
+		fin = fopen(add, "r"); //"r" for read
+		
+		if (fin != NULL) {
+			//Put the contents of the file into charList
+			fgets(charList, BIGLEN, fin);
+			
+			//At this point, we have our input (charList). Now, let's confirm that it's what the user wants before we ship it back out to the main method
+			cout << "Input: " << charList << endl;
+			cout << "Confirm Input? (y/n)" << endl;
+			cout << "> ";
+			char confirm;
+			cin >> confirm; cin.clear(); cin.ignore(LEN, '\n');
+			
+			if (confirm == 'y') {
+				haveInput = true;
+			}
+		}
+		else {
+			cout << "There was an issue opening the file at \"" << add << "\". Please try again" << endl;
+		}
+		fclose(fin);
+		
+		delete(fin);
+	}
+	//Exit
+	else if (strcmp(cmdin, "exit") == 0 || strcmp(cmdin, "e") == 0 || strcmp(cmdin, "E") == 0) {
+		cout << "Closing program..." << endl;
+		quit = true; //Set the bool pointer to true, which will trigger the program to end back in the main method
+		return NULL;
+	}
+	//Invalid command
+	else {
+		cout << "Command \"" << cmdin << "\" not recognized" << endl;
+	}
+	cout << endl;
+	
+	//Return the complete input
+	return charList;
 }
 
 void insertToken(GTree* tree, int address, int newToken) {
@@ -78,7 +235,7 @@ void insertToken(GTree* tree, int address, int newToken) {
 	
 	//Replace the current token at address with input[i]
 	int oldToken = tree->get(address);
-	tree->set(address, newToken);
+	tree->setParent(address, newToken);
 	
 	//Start the cycle again if necesary
 	//If the old token wasn't 0 (this is here because without it, the zeroes all the way down the chain would compare themselves to each other needlessly, which would be super-mega inefficient)
@@ -98,11 +255,10 @@ void insertToken(GTree* tree, int address, int newToken) {
 	}
 }
 
-GTree maxTreeSort(int* input) {
+GTree treeSort(int* input) {
 	
 	GTree tree(BIGLEN);
 	//For future reference, the "boss parent" is the very first node; the one which all others lead back to
-	//
 	//For every token in input...
 	for (int i = 0; input[i] != 0; i++) { //i is iterator for input
 		for (int j = 0; j < LEN; j++) { //j is iterator for tree
@@ -113,6 +269,24 @@ GTree maxTreeSort(int* input) {
 				insertToken(&tree, j, input[i]);
 				break;
 			}
+		}
+	}
+	
+	return tree;
+}
+
+GTree treeSort(int input) {
+	
+	GTree tree(BIGLEN);
+	//For future reference, the "boss parent" is the very first node; the one which all others lead back to
+	//For every token in input...
+	for (int i = 0; i < LEN; i++) { //i is iterator for tree
+		//... and go through the tree from left to right until a token of lower magnitude than the current number from input is found.
+		//At which point replace the new token with the old, then recursively sort down the tree from that point.
+		if (input[i] >= tree.get(i)) {
+			//Sort the new token and all of its children
+			insertToken(&tree, i, input);
+			break;
 		}
 	}
 	
@@ -133,10 +307,10 @@ void printTree(GTree* tree) {
 		
 		cout << "After New C1: " << tree.tree[i] << endl << endl;
 		if (i == 0) {
-			cout << "Master parent: " << tree.getParent(i) << endl;
+			cout << "Master parent: " << tree.get(i) << endl;
 		}
 		else {
-			cout << "Pair " << (i + 3) / 2 << child << ": " << tree.getParent(i) << endl;
+			cout << "Pair " << (i + 3) / 2 << child << ": " << tree.get(i) << endl;
 		}
 		odd = !odd;
 		
@@ -158,15 +332,11 @@ void printTree(GTree* tree) {
 			break;
 		}
 		//If generation is over, start a new line
-		//i >= (limit * 2 - 1) works out to always be true on the very first loop because limit starts out as a negative number, as well as on every cycle at any positive integer x for 2^x amount of iterations after that (e.x. is true at iteration 1, 2, 4, 8, 16, 32, 64, etc.)
-		if (i >= limit * 2 - 1) {
+		if (i + 2 >= limit * 2 + 1) {
 			cout << endl;
 			cout << "Generation " << ++generation << ": "; //Announce the new generation
 			limit = i + 1;
 		}
-		/*
-		Everything after this point only exists to make the tree UI readable
-		*/
 		//If the token is not empty, print it to console.
 		if (!tree->isEmpty(i)) {
 			//If the token address is odd or if it is the master parent, put an open parenthesis before it
@@ -194,166 +364,3 @@ void printTree(GTree* tree) {
 	
 }
 
-int* parseInput(char* inputString) {
-	char* current = new char[LEN];
-	int* numStream = new int[LEN];
-	
-	//Clear pesky leftover ram from pointer arrays
-	
-	clearCString(current, LEN);
-	for (int i = 0; i < LEN; i++) {
-		numStream[i] = 0;
-	}
-	
-	//cout << "Starting inputString: " << inputString << endl;
-	//cout << "Starting current: " << current << endl;
-	
-	//Parse the input
-	int j = 0; //Iterator for current
-	int k = 0; //Iterator for numStream
-	for (int i = 0; i < BIGLEN + 1; i++) {
-		//If we have hit the 100 number max limit
-		if (k >= LEN - 1) {
-			break;
-		}
-		//If is number
-		if (inputString[i] >= 48 && inputString[i] <= 57) {
-			//Add the digit to the end of the current multi-digit number
-			current[j] = inputString[i];
-			j++;
-		}
-		//If is space
-		else if (inputString[i] == 32) {
-			if (j != 0) {
-				//cout << "Space: " << current << endl;
-				//current contains the number that we want to convert to an integer
-				int next = 0;
-				
-				//Iterate backwards through current
-				for (int l = j - 1; l >= 0; l--) {
-					//Convert the char* to int one unit place at a time by adding each value * 10^place. For example, when in the hundred's place, place = 2.
-					next += (current[l] - 48) * round(pow(10, j - l - 1));
-				}
-				//cout << "Next: " << next << endl;
-				numStream[k] = next;
-				j = 0;
-				k++;
-				
-				clearCString(current, LEN);
-			}
-		}
-		//If is null
-		else if (inputString[i] == 0) {
-			if (j != 0) {
-				//cout << "Null: " << current << endl;
-				//current contains the number that we want to convert to an integer
-				int next = 0;
-				
-				//Iterate backwards through current
-				for (int l = j - 1; l >= 0; l--) {
-					//Convert the char* to int one unit place at a time by adding each value * 10^place. For example, when in the hundred's place, place = 2.
-					next += (current[l] - 48) * round(pow(10, j - l - 1));
-				}
-				numStream[k] = next;
-				break;
-			}
-		}
-	}
-	delete(current);
-	
-	return numStream;
-}
-
-char* getInput(bool& quit) {
-	
-	bool haveInput = false;
-	char cmdin[LEN];
-	char* inputString = new char[BIGLEN];
-	
-	//Stay in this section until we have the input
-	while (!haveInput) {
-		//Clear both of our big boy cstrings
-		clearCString(inputString, BIGLEN);
-	
-		//Ask how the user wants to input the numbers
-		cout << "Type \"console\" to type your numbers straight into the console " << endl << 
-		"Type \"file\" to read from file " << endl << 
-		"Type \"exit\" to kill the program" << endl;
-	
-		cout << "> ";
-		cin >> cmdin; cin.clear(); cin.ignore(LEN, '\n');
-		
-		cout << endl;
-		//Read from console
-		if (strcmp(cmdin, "console") == 0 || strcmp(cmdin, "c") == 0 || strcmp(cmdin, "C") == 0) {
-			cout << "Reading from console..." << endl <<
-			"Input your number inputs, each separated by a space" << endl;
-			
-			//Read in the input from console and put it into inputString
-			cout << "Console> ";
-			cin.getline(inputString, BIGLEN);
-	
-			//At this point, we have our input (inputString). Now, let's confirm that it's what the user wants.
-			cout << "Input: " << inputString << endl;
-			cout << "Confirm Input? (y/n)" << endl;
-			cout << "> ";
-			char confirm;
-			cin >> confirm; cin.clear(); cin.ignore(LEN, '\n');
-			
-			if (confirm == 'y') {
-				haveInput = true;
-			}
-		}
-		//Read from file
-		else if (strcmp(cmdin, "file") == 0 || strcmp(cmdin, "f") == 0 || strcmp(cmdin, "F") == 0) {
-			char add[LEN];
-			FILE* fin = NULL; //Credit to my dad from showing me the FILE libraries from ye olde C
-			
-			cout << "Reading from file..." << endl <<
-			"Input the path to your file. It must be a text file:" << endl;
-			
-			//Get address
-			cout << "File> ";
-			cin.getline(add, LEN);
-			
-			//Get file from address
-			fin = fopen(add, "r"); //"r" for read
-			
-			if (fin != NULL) {
-				//Put the contents of the file into inputString
-				fgets(inputString, BIGLEN, fin);
-				
-				//At this point, we have our input (inputString). Now, let's confirm that it's what the user wants before we ship it back out to the main method
-				cout << "Input: " << inputString << endl;
-				cout << "Confirm Input? (y/n)" << endl;
-				cout << "> ";
-				char confirm;
-				cin >> confirm; cin.clear(); cin.ignore(LEN, '\n');
-				
-				if (confirm == 'y') {
-					haveInput = true;
-				}
-			}
-			else {
-				cout << "There was an issue opening the file at \"" << add << "\". Please try again" << endl;
-			}
-			fclose(fin);
-			
-			delete(fin);
-		}
-		//Exit
-		else if (strcmp(cmdin, "exit") == 0 || strcmp(cmdin, "e") == 0 || strcmp(cmdin, "E") == 0) {
-			cout << "Closing program..." << endl;
-			quit = true; //Set the bool pointer to true, which will trigger the program to end back in the main method
-			return NULL;
-		}
-		//Invalid command
-		else {
-			cout << "Command \"" << cmdin << "\" not recognized" << endl;
-		}
-		cout << endl;
-	}
-	
-	//Return the complete input
-	return inputString;
-}

@@ -1,4 +1,4 @@
- //BattlePack.h
+//BattlePack.h
 /*
 Hi. I'm Greggory Hickman, and these are some helpful methods to use in your C++ code.
 */
