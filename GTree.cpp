@@ -3,84 +3,70 @@
 #include "GTree.h"
 
 //Constructor
-GTree::GTree(int LENGTH) {
-	this->LENGTH = LENGTH;
-	heap = new int[LENGTH];
-	
-	//Set all initial values to be 0, which is my version of null for this project because real numbers can only be from 1 to 1000
-	for (int i = 0; i < LENGTH; i++) {
-		heap[i] = 0;
-	}
-	
-	highest = 0;
+GTree::GTree() {
+	head = new GNode();
+	current = head;
 }
 
 GTree::~GTree() {
-	delete(heap);
+	delete(head);
 }
 
-int GTree::getHighest() {
-	return highest;
+
+void GTree::resetCurrent() {
+	current = head;
 }
 
-int GTree::get(int address) {
-	if (address < LENGTH) {
-		return heap[address];
-	}
-	return -1; //Return -1 if the program tries to access an address which isn't allocated in memory
+int GTree::get() {
+	return current->token;
 }
 
-int GTree::getChild1(int address) {
-	if ((address + 1) * 2 - 1 < LENGTH) {
-		return heap[(address + 1) * 2 - 1];
-	}
-	return -1; //Return -1 if the program tries to access an address which isn't allocated in memory
-}
-		
-int GTree::getChild2(int address) {
-	if ((address + 1) * 2 < LENGTH) {
-		return heap[(address + 1) * 2];
-	}
-	return -1; //Return -1 if the program tries to access an address which isn't allocated in memory
+int GTree::getLeft() {
+	return current->left->token;
 }
 
-bool GTree::isEmpty(int address) {
-	if (heap[address] == 0) {
+int GTree::getRight() {
+	return current->right->token;
+}
+
+bool GTree::leftIsEmpty() {
+	//If the current token is -1, that means that it hasn't been assigned a value yet, and is thus considered null
+	//If current is just straight up NULL then yeah, it's gonna be considered null.
+	if (current->left == NULL || current->left->token == -1) 
 		return true;
-	}
-	else {
+	else 
 		return false;
-	}
 }
 
-void GTree::set(int address, int value) {
-	if (address < LENGTH) {
-		//Set that value
-		heap[address] = value;
-		
-		//Update highest if necesary
-		if (address > highest) {
-			highest = address;
-		}
-	}
+bool GTree::rightIsEmpty() {
+	//If the current token is -1, that means that it hasn't been assigned a value yet, and is thus considered null
+	//If current is just straight up NULL then yeah, it's gonna be considered null.
+	if (current->right == NULL || current->right->token == -1) 
+		return true;
+	else 
+		return false;
 }
 
-void GTree::setChild1(int address, int value) {
-	if ((address + 1) * 2 - 1 < LENGTH) {
-		heap[(address + 1) * 2 - 1] = value;
-		
-		if ((address + 1) * 2 - 1 > highest) {
-			highest = (address + 1) * 2 - 1;
-		}
-	}
+void GTree::set(int value) {
+	current->token = value;
 }
 
-void GTree::setChild2(int address, int value) {
-	if ((address + 1) * 2 < LENGTH) {
-		heap[(address + 1) * 2] = value;
-		
-		if ((address + 1) * 2 > highest) {
-			highest = (address + 1) * 2;
-		}
-	}
+void GTree::setLeft(int value) {
+	GNode newNode;
+	newNode.token = value;
+	current->left = &newNode;
+}
+
+void GTree::setRight(int value) {
+	GNode newNode;
+	newNode.token = value;
+	current->right = &newNode;
+}
+
+void GTree::moveLeft() {
+	current = current->left;
+}
+
+void GTree::moveRight() {
+	current = current->right;
 }

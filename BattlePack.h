@@ -19,6 +19,15 @@ void clearCString(char*& in, int len) {
 }
 
 /*
+Clears all data from an int array. Can be used to empty out a previously used array, or to clear any random RAM still present inside.
+*/
+void clearIntArray(int*& in, int len) {
+	for (int i = 0; i < len; i++) {
+		in[i] = 0;
+	}
+}
+
+/*
 Converts a character terminated cstring of numbers to an array of intergers. Ignores things other than numbers, making them safe to input.
 The character that separates each number can be specified. For example, for a traditional zero terminated string, separator should be '0' or (char)48.
 This method uses the clearCString method which can be seen above. Please keep that in mind when using this code.
