@@ -8,6 +8,7 @@ void resetCurrent() - Resets the position of current back to the head.
 int get() - Get the token of the current GNode.
 int getLeft(int) - Returns the token of the current GNode's left child.
 int getRight(int) - Returns the token of the current GNode's left child.
+bool currentIsEmpty() - Return true if current is NULL (or undefined).
 bool leftIsEmpty() - Returns true if the left child of current is NULL.
 bool rightIsEmpty() - Returns true if the right child of current is NULL.
 void set(int) - Set the token of the current GNode.
@@ -35,6 +36,7 @@ class GTree {
 		int get();
 		int getLeft();
 		int getRight();
+		bool currentIsEmpty();
 		bool leftIsEmpty();
 		bool rightIsEmpty();
 		void set(int);

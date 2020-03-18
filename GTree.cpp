@@ -29,6 +29,15 @@ int GTree::getRight() {
 	return current->right->token;
 }
 
+bool GTree::currentIsEmpty() {
+	//If the current token is -1, that means that it hasn't been assigned a value yet, and is thus considered null
+	//If current is just straight up NULL then yeah, it's gonna be considered null.
+	if (current == NULL || current->token == -1) 
+		return true;
+	else 
+		return false;
+}
+
 bool GTree::leftIsEmpty() {
 	//If the current token is -1, that means that it hasn't been assigned a value yet, and is thus considered null
 	//If current is just straight up NULL then yeah, it's gonna be considered null.
@@ -48,19 +57,24 @@ bool GTree::rightIsEmpty() {
 }
 
 void GTree::set(int value) {
+	/* Bug: Cannot redefine the thing that current is pointing to, can only starting pointing at something else.
+	GNode* newNode = new GNode();
+	newNode->token = value;
+	current = *&newNode;
+	*/
 	current->token = value;
 }
 
 void GTree::setLeft(int value) {
-	GNode newNode;
-	newNode.token = value;
-	current->left = &newNode;
+	GNode* newNode = new GNode();
+	newNode->token = value;
+	current->left = newNode;
 }
 
 void GTree::setRight(int value) {
-	GNode newNode;
-	newNode.token = value;
-	current->right = &newNode;
+	GNode* newNode = new GNode();
+	newNode->token = value;
+	current->right = newNode;
 }
 
 void GTree::moveLeft() {

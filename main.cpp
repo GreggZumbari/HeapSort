@@ -164,19 +164,29 @@ int* addFunction() {
 }
 
 void addToTree(GTree* tree, int token) {
+	tree->resetCurrent();
 	//Repeat this process until the number is in the right place
 	while (true) {
 		//If the head is unassigned
-		if (tree->get() == -1) {
+		if (tree->currentIsEmpty()) {
 			//Plop the new token onto the head
 			tree->set(token);
 			break;
 		}
-		else if (tree->leftIsEmpty() == true) {
+		else if (tree->leftIsEmpty()) {
+			//tree->moveLeft();
+			//tree->set(token);
 			tree->setLeft(token);
+			break;
 		}
-		else if (tree->rightIsEmpty() == true) {
-			tree->setLeft(token);
+		else if (tree->rightIsEmpty()) {
+			//tree->moveRight();
+			//tree->set(token);
+			tree->setRight(token);
+			break;
+		}
+		else {
+			break;
 		}
 	}
 }
