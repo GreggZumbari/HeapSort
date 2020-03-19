@@ -11,6 +11,7 @@ Hi. I'm Greggory Hickman, and these are some helpful methods to use in your C++ 
 
 /*
 Clears all data from a cstring. Can be used to empty out a previously used cstring, or to clear any random RAM still present inside.
+@author Greggory Hickman, February 2020
 */
 void clearCString(char*& in, int len) {
 	for (int i = 0; i < len; i++) {
@@ -20,6 +21,7 @@ void clearCString(char*& in, int len) {
 
 /*
 Clears all data from an int array. Can be used to empty out a previously used array, or to clear any random RAM still present inside.
+@author Greggory Hickman, February 2020
 */
 void clearIntArray(int*& in, int len) {
 	for (int i = 0; i < len; i++) {
@@ -31,6 +33,7 @@ void clearIntArray(int*& in, int len) {
 Converts a character terminated cstring of numbers to an array of intergers. Ignores things other than numbers, making them safe to input.
 The character that separates each number can be specified. For example, for a traditional zero terminated string, separator should be '0' or (char)48.
 This method uses the clearCString method which can be seen above. Please keep that in mind when using this code.
+@author Greggory Hickman, February 2020
 */
 int* parseZTCString(char* charList, char separator) {
 	char* current = new char[LEN];

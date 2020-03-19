@@ -126,8 +126,14 @@ int main() {
 			//Sort each number into the tree one by one
 			for (int i = 0; numbersToAdd[i] > 0; i++) {
 				//Set the current pointer back to the head
-				tree.resetCurrent();
-				addToTree(&tree, numbersToAdd[i]);
+				int* treeGuts = tree.flushTree();
+				//for (int i = 0; treeGuts[i] != 0; i++) cout << treeGuts[i] << ", ";
+				for (int j = 0; j < BIGLEN; j++) {
+					if (treeGuts[j] == numbersToAdd[i]) {
+						treeGuts[j] = -1;
+					}
+				}
+				cout << endl;
 			}
 		}
 	}

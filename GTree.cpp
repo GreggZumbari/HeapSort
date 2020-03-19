@@ -136,7 +136,7 @@ void GTree::checkChildren(GNode*& node, int generation) {
 
 int GTree::numberCount(int value) {
 	count = 0;
-	//Check both children of the head
+	//Check the entire tree starting from head
 	searchChildren(head, value);
 	return count;
 }	
@@ -160,19 +160,66 @@ void GTree::searchChildren(GNode*& node, int number) {
 	}
 }
 
+int* GTree::flushTree() {
+	count = 0;
+	//We are going to use the class variable "treeGuts" to store our tokens after the tree is completely emptied
+	treeGuts = new int[BIGLEN];
+	for (int i = 0; i < BIGLEN; i++) {
+		treeGuts[i] = -1;
+	}
+	if (!headIsEmpty()) {
+		//Record head
+		treeGuts[count] = head->token;
+		count++;
+		//Flush the entire tree
+		flushChildren(head);
+	}
+	head = new GNode();
+	resetCurrent();
+	//Return the complete list of tokens that we recorded along the way
+	return treeGuts;
+}
+
+//Private function
+void GTree::flushChildren(GNode*& node) {
+	
+	//If the left child isn't NULL, check both of their children
+	if (node->left != NULL) {
+		//Record the current token
+		treeGuts[count] = node->left->token;
+		count++;
+		
+		//Flush the children of the left node
+		flushChildren(node->left); //Check the next generation
+	}
+	//If the right child isn't NULL, check both of their children
+	if (node->right != NULL) {
+		//Record the current token
+		treeGuts[count] = node->right->token;
+		count++;
+		
+		//Flush the children of the right node
+		flushChildren(node->right);
+	}
+	
+	delete(node); //Down the toilet this node goes!
+}
+
+/*
 void GTree::removeNumber(int value) {
 	deleteChildren(head, value);
 	return;
 }
 
+
 //Private function
 void GTree::deleteChildren(GNode*& node, int numberToRemove) {
 	//If one of the children's tokens is the number that we want to remove
 	if (node->left->token == numberToRemove) {
-		
+		removeLeft(node); //Remove the left node
 	}
 	if (node->right->token == numberToRemove) {
-		
+		removeRight(node); //Remove the right node
 	}
 	//If the left child isn't NULL, check both of their children
 	if (node->left != NULL) {
@@ -186,6 +233,30 @@ void GTree::deleteChildren(GNode*& node, int numberToRemove) {
 	}
 }
 
-void GTree::removeNode(GNode*& node) {
+void GTree::removeLeft(GNode*& node) {
+	
+	
+	//If the node to delete has no left or right child
+	if (node->left->left == NULL && node->left->right == NULL) {
+		//Just get rid of the node, no questions asked
+		node->left = NULL;
+	}
+	//If the node to delete has no left child, but has a right child
+	else if (node->left->left == NULL) {
+		//The node to delete gets replaced by the right child
+		node->left = node->left->right;
+	}
+	//If the node to delete has no right child, but has a left child
+	else if (node->left->right == NULL) {
+		//If the left child of the node to delete has no left or right child
+		
+	}
 	
 }
+
+void GTree::removeRight(GNode*& node) {
+	
+	//If the node to delete has no left or right child
+	
+}
+*/
