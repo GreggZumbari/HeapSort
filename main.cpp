@@ -7,7 +7,7 @@ The program first allows the user to enter up to 100 different number inputs, th
 The above description is nearly exactly copied over from my previous Tree project because this project does nearly exactly the same thing. 
 This time, however, you are allowed to add, remove, and search for specific numbers throughout the Tree. Also, the medium for the inputs will now be Node structs (named GNode, of course) instead of an int array, sorted using some clever math
 
-void printTree(GTree*) - Print out the GTree in a visual format.
+//void printTree(GTree*) - Print out the GTree in a visual format.
 void addToTree(GTree*, int) - Put a number into the tree in the place that it should be in.
 int* addFunction() - Get the user to put in their input(s) to add to the tree, and then print out the parsed version.
 int* removeFunction() - Get the user to put in their input(s) that they want removed from the tree, and then print out the parsed version.
@@ -32,7 +32,7 @@ void insertToken(GTree& tree, int address, int newToken);
 GTree maxTreeSort(int*);
 void printTree(GTree*);
 */
-void printTree(GTree*);
+//void printTree(GTree*);
 void addToTree(GTree*, int);
 int* addFunction();
 int* removeFunction();
@@ -90,6 +90,7 @@ int main() {
 			//If the user typed an invalid command
 			else {
 				cout << "Command \"" << cmdin << "\" not recognized" << endl;
+				break;
 			}
 			cout << endl;
 		}
@@ -97,6 +98,8 @@ int main() {
 		//Now, update the tree
 		//If the user previously told the program to add (a) number(s)
 		if (strcmp(cmdin, "add") == 0 || strcmp(cmdin, "a") == 0 || strcmp(cmdin, "A") == 0) {
+			//Set the current pointer back to the head
+			tree->resetCurrent();
 			//Sort each number into the tree one by one
 			for (int i = 0; numbersToAdd[i] > 0; i++) {
 				addToTree(&tree, numbersToAdd[i]);
@@ -104,27 +107,10 @@ int main() {
 		}
 		
 		//Print the GTree
-		printTree(&tree);
+		tree.printTree();
 	}
 	
 	return 0;
-}
-
-void printTree(GTree* tree) {
-	//Reset current
-	tree->resetCurrent();
-	
-	//Print the tree
-	cout << "Generation 1: " << tree->get() << endl;
-	if (!(tree->leftIsEmpty())) {
-		cout << "Generation 2: " << tree->getLeft();
-	}
-	if (!(tree->rightIsEmpty())) {
-		cout << ", " << tree->getRight() << endl;
-	}
-	else {
-		cout << endl;
-	}
 }
 
 bool confirmInput() {
@@ -164,30 +150,20 @@ int* addFunction() {
 }
 
 void addToTree(GTree* tree, int token) {
-	tree->resetCurrent();
-	//Repeat this process until the number is in the right place
-	while (true) {
-		//If the head is unassigned
-		if (tree->currentIsEmpty()) {
-			//Plop the new token onto the head
-			tree->set(token);
-			break;
-		}
-		else if (tree->leftIsEmpty()) {
-			//tree->moveLeft();
-			//tree->set(token);
-			tree->setLeft(token);
-			break;
-		}
-		else if (tree->rightIsEmpty()) {
-			//tree->moveRight();
-			//tree->set(token);
-			tree->setRight(token);
-			break;
-		}
-		else {
-			break;
-		}
+	
+	//A test function which can only assign the first two children of the head, and the head itself
+	//If current is unassigned. This should only be true if current is at the head.
+	if (tree->currentIsEmpty()) {
+		//Plop the new token onto the head
+		tree->setHead(token);
+	}
+	//If the left child is unassigned
+	else if (tree->leftIsEmpty()) {
+		tree->setLeft(token);
+	}
+	//If the right child is unassigned
+	else if (tree->rightIsEmpty()) {
+		tree->setRight(token);
 	}
 }
 
