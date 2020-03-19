@@ -133,6 +133,11 @@ int main() {
 						treeGuts[j] = -1;
 					}
 				}
+				for (int j = 0; j < BIGLEN; j++) {
+					if (treeGuts[j] != -1) {
+						addToTree(&tree, treeGuts[j]);
+					}
+				}
 				cout << endl;
 			}
 		}
