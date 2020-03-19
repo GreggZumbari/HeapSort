@@ -99,7 +99,7 @@ int main() {
 		//If the user previously told the program to add (a) number(s)
 		if (strcmp(cmdin, "add") == 0 || strcmp(cmdin, "a") == 0 || strcmp(cmdin, "A") == 0) {
 			//Set the current pointer back to the head
-			tree->resetCurrent();
+			tree.resetCurrent();
 			//Sort each number into the tree one by one
 			for (int i = 0; numbersToAdd[i] > 0; i++) {
 				addToTree(&tree, numbersToAdd[i]);
@@ -138,6 +138,7 @@ int* addFunction() {
 	
 	//Parse the char* input into an int* with each number separated
 	int* numbersToAdd = parseZTCString(inputString, 32);
+	delete(inputString);
 
 	//At this point, we have our input (inputString).
 	cout << "Input: ";
@@ -149,27 +150,44 @@ int* addFunction() {
 	return numbersToAdd;
 }
 
-void addToTree(GTree* tree, int token) {
-	
-	//A test function which can only assign the first two children of the head, and the head itself
-	//If current is unassigned. This should only be true if current is at the head.
-	if (tree->currentIsEmpty()) {
-		//Plop the new token onto the head
-		tree->setHead(token);
+void addToTree(GTree* tree, int newToken) {
+	//If the head is undefined
+	if (tree->headIsEmpty()) {
+		//Set the head to be the new token
+		tree->setHead(newToken);
+		return;
 	}
-	//If the left child is unassigned
-	else if (tree->leftIsEmpty()) {
-		tree->setLeft(token);
+	while (true) {
+		//If the new token is smaller than current's token
+		if (newToken < tree->getCurrent()) {
+			//If the left child is defined
+			if (!(tree->leftIsEmpty())) {
+				tree->moveLeft(); //Move current one spot to the left
+			}
+			//If the left child is not defined
+			else {
+				tree->setLeft(newToken); //Set the left child to be the new token
+				break;
+			}
+		}
+		//If the new token is larger than or equal to current's token
+		if (newToken >= tree->getCurrent()) {
+			//If the right child is defined
+			if (!(tree->rightIsEmpty())) {
+				tree->moveRight(); //Move current one spot to the right
+			}
+			//If the right child is not defined
+			else {
+				tree->setRight(newToken); //Set the right child to be the new token
+				break;
+			}
+		}
 	}
-	//If the right child is unassigned
-	else if (tree->rightIsEmpty()) {
-		tree->setRight(token);
-	}
+	return;
 }
 
 int* removeFunction() {
 	char* inputString = new char[BIGLEN];
-	char confirm;
 	
 	cout << "Reading from console..." << endl <<
 	"Enter the number you would like to remove. If you have multiple, separate them with spaces." << endl;
