@@ -7,10 +7,11 @@ The program first allows the user to enter up to 100 different number inputs, th
 The above description is nearly exactly copied over from my previous Tree project because this project does nearly exactly the same thing. 
 This time, however, you are allowed to add, remove, and search for specific numbers throughout the Tree. Also, the medium for the inputs will now be Node structs (named GNode, of course) instead of an int array, sorted using some clever math
 
-//void printTree(GTree*) - Print out the GTree in a visual format.
 void addToTree(GTree*, int) - Put a number into the tree in the place that it should be in.
 int* addFunction() - Get the user to put in their input(s) to add to the tree, and then print out the parsed version.
 int* removeFunction() - Get the user to put in their input(s) that they want removed from the tree, and then print out the parsed version.
+int searchFunction() - Get the user to input the number that they want to search the tree for.
+void search(GTree*, int) - Print out the amount of times that the inputted number appears in the tree with some random UI stuff added in to make the info understandable.
 bool confirmInput() - Simply asks the user for a yes or no response (y/n). Purely for modularity purposes.
 
 @author Greggory Hickman, March 2020
@@ -32,10 +33,11 @@ void insertToken(GTree& tree, int address, int newToken);
 GTree maxTreeSort(int*);
 void printTree(GTree*);
 */
-//void printTree(GTree*);
 void addToTree(GTree*, int);
 int* addFunction();
 int* removeFunction();
+int searchFunction();
+void search(GTree*, int);
 bool confirmInput();
 
 int main() {
@@ -57,6 +59,8 @@ int main() {
 		//Ask how the user wants to input the numbers
 		cout << "Type \"add\" to add a number" << endl << 
 		"Type \"remove\" to remove a number" << endl << 
+		"Type \"search\" to find out how many times a number appears within the tree" << endl << 
+		"Type \"print\" to print out the tree into console" << endl << 
 		"Type \"exit\" to kill the program" << endl;
 	
 		cout << "> ";
@@ -80,6 +84,18 @@ int main() {
 				numbersToAdd = removeFunction(); //Pretend that numbersToAdd now says numbersToRemove
 				//Confirm the input
 				haveInput = confirmInput();
+			}
+			else if (strcmp(cmdin, "search") == 0 || strcmp(cmdin, "s") == 0 || strcmp(cmdin, "S") == 0) {
+				//Call the search function
+				int numberToSearchFor = searchFunction();
+				//Tell the user how many times that number appears in the tree
+				search(&tree, numberToSearchFor);
+				break;
+			}
+			else if (strcmp(cmdin, "print") == 0 || strcmp(cmdin, "p") == 0 || strcmp(cmdin, "P") == 0) {
+				//Print the tree
+				tree.printTree();
+				break;
 			}
 			//If the user typed "exit"
 			else if (strcmp(cmdin, "exit") == 0 || strcmp(cmdin, "e") == 0 || strcmp(cmdin, "E") == 0) {
@@ -105,12 +121,43 @@ int main() {
 				addToTree(&tree, numbersToAdd[i]);
 			}
 		}
-		
-		//Print the GTree
-		tree.printTree();
+		//If the user previously told the program to remove (a) number(s)
+		else if (strcmp(cmdin, "remove") == 0 || strcmp(cmdin, "r") == 0 || strcmp(cmdin, "R") == 0) {
+			//Sort each number into the tree one by one
+			for (int i = 0; numbersToAdd[i] > 0; i++) {
+				//Set the current pointer back to the head
+				tree.resetCurrent();
+				addToTree(&tree, numbersToAdd[i]);
+			}
+		}
 	}
 	
 	return 0;
+}
+
+void search(GTree* tree, int numberToSearchFor) {
+	cout << tree->numberCount(numberToSearchFor) << " instances of the number \"" << numberToSearchFor << "\" found." << endl << endl;
+	return;
+}
+
+int searchFunction() {
+	char* inputString = new char[BIGLEN];
+	
+	cout << "Reading from console..." << endl <<
+	"Enter the number you would like to search for." << endl;
+	
+	//Read in the input from console and put it into inputString
+	cout << "Search> ";
+	cin.getline(inputString, BIGLEN);
+	
+	//Parse the char* input into an int* with each number separated
+	int* numberToSearchFor = parseZTCString(inputString, 32);
+	delete(inputString); //We don't need this anymore.
+
+	//At this point, we have our number that we want to search for. We only want the first one. The rest of them must be incinerated.
+	int out = numberToSearchFor[0];
+	delete(numberToSearchFor); //INCINERATE ALL OF THE UNNECESSARY NUMBERS! MWAHAHAHA!!!!
+	return out;
 }
 
 bool confirmInput() {

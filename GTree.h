@@ -4,6 +4,8 @@ This object is a tree of integers, starting with a single parent node. Each node
 By the way, when I say node, I'm not referring to a struct or anything like that. I'm referring to a single element in the tree, which as you can see, is an int array.
 The algorithm for this int array, shown to me by Mr. Galbraith, is such that a parent's two children each reside at (parent's address * 2) and (parent's address * 2 + 1). For example, 4's children are at 8 and 9, and 9's children are at 18 and 19, etc. This works out so that nobody overrides anybody else, and it only uses a single array as storage.
 
+Public functions:
+
 int getCurrent() - Get the token of the current GNode.
 int getLeft(int) - Returns the token of the current GNode's left child.
 int getRight(int) - Returns the token of the current GNode's left child.
@@ -17,6 +19,16 @@ void moveLeft() - Move current to the left child.
 void moveRight() - Move current to the right child.
 void resetCurrent() - Resets the position of current back to the head.
 void printTree() - Print out the whole tree to console in a visual format. It does so by checking the first node's children, and then by checking each of their children, and then by checking each of their children, etc. until you have reached the very bottom of the list, in which case instead of checking the new non-existant children, it will go on to print out the last node's token, and then it will recursively work its way backwards through each recursive function, printing out each parent as it goes, until it gets back to the very top, at which point it will simply print the head.
+int numberCount(int) - Returns the amount of times that a specific number was found inside the tree.
+void removeNumber(int) - Removes the first instance of the specified number found, and updates the tree accordingly.
+
+
+Private functions:
+
+void checkChildren(GNode*&, int) - Call this function for any existing children of the inputted GNode, then print out the inputted GNode's token.
+void searchChildren(GNode*&, int) - Same as above, except instead of printing out each node, it searches each node and finds out how many of a specified number that there is within the tree.
+void deleteChildren(GNode*&, int) - Same as above, except instead of printing out each node, it searches until it finds the first instance of the specified number, and deletes it.
+void removeNode(GNode*&) - Directly removes a specific GNode, and then fixes the GTree so that it is still legal.
 
 @author Greggory Hickman, February 2020
 @version 1.0
@@ -48,6 +60,8 @@ class GTree {
 		void moveRight();
 		void resetCurrent();
 		void printTree();
+		int numberCount(int);
+		void removeNumber(int);
 		
 	private:
 		struct GNode {
@@ -62,11 +76,14 @@ class GTree {
 			}
 		};
 		
-		//Private function meant to be used recursively
-		//Call this function for any existing children of the inputted GNode, then print out the inputted GNode's token.
+		//Private functions meant to be used recursively
 		void checkChildren(GNode*&, int);
+		void searchChildren(GNode*&, int);
+		void deleteChildren(GNode*&, int);
+		void removeNode(GNode*&);
 	
 		//Class variables
+		int count;
 		GNode* head; //The head of the tree
 		GNode* marker; //A marker that the programmer can set anywhere in the tree for later reference.
 		GNode* current; //The current GNode that the user is looking at.

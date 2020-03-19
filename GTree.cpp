@@ -99,13 +99,19 @@ void GTree::printTree() {
 	int generation = 1;
 	
 	cout << "Tree: " << endl << "---" << endl;
-	//Check both children of the head
-	cout << "Generation 1: " << head->token << endl;
-	checkChildren(head, generation);
-	
+	//Make sure that there is something in the tree before we go and print it
+	if (!headIsEmpty()) {
+		//Check both children of the head
+		cout << "Generation 1: " << head->token << endl;
+		checkChildren(head, generation);
+	}
+	else {
+		cout << "EMPTY" << endl;
+	}
 	cout << "---" << endl << endl;
 }
 
+//Private function
 void GTree::checkChildren(GNode*& node, int generation) {
 	
 	//If the left child isn't NULL, check both of their children
@@ -122,8 +128,64 @@ void GTree::checkChildren(GNode*& node, int generation) {
 		//Print out the next node's token now so that we can specify which direction that it is in relation to the current node
 		cout << "Generation " << ++generation << " (Right): " << node->right->token << endl;
 		
-		//Check the children of the left node
+		//Check the children of the right node
 		checkChildren(node->right, generation);
 		generation--;
 	}
+}
+
+int GTree::numberCount(int value) {
+	count = 0;
+	//Check both children of the head
+	searchChildren(head, value);
+	return count;
+}	
+
+//Private function
+void GTree::searchChildren(GNode*& node, int number) {
+	//If the current token is the number that we're searching for
+	if (node->token == number) {
+		//Increment the counter
+		count++;
+	}
+	//If the left child isn't NULL, check both of their children
+	if (node->left != NULL) {
+		//Check the children of the left node
+		searchChildren(node->left, number); //Check the next generation
+	}
+	//If the right child isn't NULL, check both of their children
+	if (node->right != NULL) {
+		//Check the children of the right node
+		searchChildren(node->right, number);
+	}
+}
+
+void GTree::removeNumber(int value) {
+	deleteChildren(head, value);
+	return;
+}
+
+//Private function
+void GTree::deleteChildren(GNode*& node, int numberToRemove) {
+	//If one of the children's tokens is the number that we want to remove
+	if (node->left->token == numberToRemove) {
+		
+	}
+	if (node->right->token == numberToRemove) {
+		
+	}
+	//If the left child isn't NULL, check both of their children
+	if (node->left != NULL) {
+		//Check the children of the left node
+		searchChildren(node->left, numberToRemove); //Check the next generation
+	}
+	//If the right child isn't NULL, check both of their children
+	if (node->right != NULL) {
+		//Check the children of the right node
+		searchChildren(node->right, numberToRemove);
+	}
+}
+
+void GTree::removeNode(GNode*& node) {
+	
 }
