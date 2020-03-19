@@ -24,7 +24,7 @@ int GTree::getRight() {
 	return current->right->token;
 }
 
-bool GTree::currentIsEmpty() {
+bool GTree::headIsEmpty() {
 	//If the current token is -1, that means that it hasn't been assigned a value yet, and is thus considered null
 	//If current is just straight up NULL then yeah, it's gonna be considered null.
 	if (current == NULL || current->token == -1) 
