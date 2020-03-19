@@ -98,10 +98,10 @@ int main() {
 		//Now, update the tree
 		//If the user previously told the program to add (a) number(s)
 		if (strcmp(cmdin, "add") == 0 || strcmp(cmdin, "a") == 0 || strcmp(cmdin, "A") == 0) {
-			//Set the current pointer back to the head
-			tree.resetCurrent();
 			//Sort each number into the tree one by one
 			for (int i = 0; numbersToAdd[i] > 0; i++) {
+				//Set the current pointer back to the head
+				tree.resetCurrent();
 				addToTree(&tree, numbersToAdd[i]);
 			}
 		}

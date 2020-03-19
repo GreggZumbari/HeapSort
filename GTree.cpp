@@ -97,36 +97,33 @@ void GTree::printTree() {
 	*/
 	//Starting out at the first generation
 	int generation = 1;
-	int* heap = new int[LEN];
-	for (int i = 0; i < LEN; i++) {
-		heap[i] = 0;
-	}
 	
-	cout << "Tree: " << endl;
+	cout << "Tree: " << endl << "---" << endl;
 	//Check both children of the head
-	checkChildren(head, generation, heap, 1);
+	cout << "Generation 1: " << head->token << endl;
+	checkChildren(head, generation);
 	
-	cout << "Heap: ";
-	for (int i = 1; i < LEN; i++) cout << i << ": " << heap[i] << ", ";
-	cout << endl << endl;
+	cout << "---" << endl << endl;
 }
 
-void GTree::checkChildren(GNode*& node, int generation, int*& heap, int address) {
-	
-	//Print out the current token after both children have been completely dealt with
-	cout << "Generation " << generation << ": " << node->token << endl;
-	heap[address] = node->token;
+void GTree::checkChildren(GNode*& node, int generation) {
 	
 	//If the left child isn't NULL, check both of their children
 	if (node->left != NULL) {
-		cout << "Left" << endl;
-		checkChildren(node->left, ++generation, heap, address * 2); //Check the next generation
+		//Print out the next node's token now so that we can specify which direction that it is in relation to the current node
+		cout << "Generation " << ++generation << " (Left): " << node->left->token << endl;
+		
+		//Check the children of the left node
+		checkChildren(node->left, generation); //Check the next generation
 		generation--;
 	}
 	//If the right child isn't NULL, check both of their children
 	if (node->right != NULL) {
-		cout << "Right" << endl;
-		checkChildren(node->right, ++generation, heap, address * 2 + 1);
+		//Print out the next node's token now so that we can specify which direction that it is in relation to the current node
+		cout << "Generation " << ++generation << " (Right): " << node->right->token << endl;
+		
+		//Check the children of the left node
+		checkChildren(node->right, generation);
 		generation--;
 	}
 }

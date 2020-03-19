@@ -24,7 +24,7 @@ void printTree() - Print out the whole tree to console in a visual format. It do
  
 #include <iostream>
 
-#define LEN 100
+#define BIGLEN 3000
 
 using namespace std;
 
@@ -64,7 +64,7 @@ class GTree {
 		
 		//Private function meant to be used recursively
 		//Call this function for any existing children of the inputted GNode, then print out the inputted GNode's token.
-		void checkChildren(GNode*&, int, int*&, int);
+		void checkChildren(GNode*&, int);
 	
 		//Class variables
 		GNode* head; //The head of the tree
